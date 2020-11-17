@@ -12,7 +12,7 @@ unsigned squash(char* buf, unsigned size)
     else {
       buf[iout++] = symbol;
       if (counter > 1) {
-        iout += inttostr(counter, buf + iout);
+        iout += jxinttostr(counter, buf + iout);
         counter = 1;
       }
     }
@@ -26,15 +26,15 @@ unsigned squash(char* buf, unsigned size)
 
 int main(int argc, char** argv)
 {
-  int file = jopen(argv[1], 0, 0);
+  int file = jxopen(argv[1], 0, 0);
   char in[1000];
-  unsigned size = jread(file, in, 1000);
-  jclose(file);
+  unsigned size = jxread(file, in, 1000);
+  jxclose(file);
 
   unsigned result_size = squash(in, size);
 
-  file = jopen(argv[2], 0x0001 | 0x0200 | 0x0400, 0644);
-  jwrite(file, in, result_size);
-  jclose(file);
+  file = jxopen(argv[2], 0x0001 | 0x0200 | 0x0400, 0644);
+  jxwrite(file, in, result_size);
+  jxclose(file);
   return 0;
 }

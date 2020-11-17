@@ -3,27 +3,25 @@
 
 int main()
 {
-  char* ptr = (char*) jmmap(0, PAGE_SIZE, PROT_WRITE | PROT_READ, MAP_PRIVATE | MAP_ANON, -1, 0);
+  char* ptr = (char*) jxmmap(0, JX_PAGE_SIZE, JX_PROT_WRITE | JX_PROT_READ, JX_MAP_PRIVATE | JX_MAP_ANON, -1, 0);
   if ((long) ptr < 0) {
-    writestr(STDOUT, "Failed to allocate page\n");
+    jxwritestr(JX_STDOUT, "Failed to allocate page\n");
     return 1;
   }
 
-  writestr(STDOUT, "Allocated\n");
+  jxwritestr(JX_STDOUT, "Allocated\n");
 
-  for (int i = 0; i < PAGE_SIZE; i++)
+  for (int i = 0; i < JX_PAGE_SIZE; i++)
     ptr[i] = 1;
 
-  ptr[8191] = 1;
+  jxwritestr(JX_STDOUT, "Done writing\n");
 
-  writestr(STDOUT, "Done writing\n");
-
-  if (jmunmap(ptr, PAGE_SIZE*10)) {
-    writestr(STDOUT, "Failed to deallocate page\n");
+  if (jxmunmap(ptr, JX_PAGE_SIZE*10)) {
+    jxwritestr(JX_STDOUT, "Failed to deallocate page\n");
     return 1;
   }
 
-  writestr(STDOUT, "Program has finished\n");
+  jxwritestr(JX_STDOUT, "Program has finished\n");
 
   return 0;
 }

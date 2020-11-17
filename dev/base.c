@@ -1,6 +1,6 @@
 #include "sys.h"
 
-unsigned strlength(const char* str)
+unsigned jxstrlength(const char* str)
 {
   int num = 0;
   while (*str != '\0') {
@@ -10,13 +10,13 @@ unsigned strlength(const char* str)
   return num;
 }
 
-int writestr(int fd, const char* buf)
+int jxwritestr(int fd, const char* buf)
 {
-  unsigned len = strlength(buf);
-  return jwrite(fd, buf, len);
+  unsigned len = jxstrlength(buf);
+  return jxwrite(fd, buf, len);
 }
 
-unsigned inttostr(int integer, char* out)
+unsigned jxinttostr(int integer, char* out)
 {
   unsigned num_digits = 0;
 

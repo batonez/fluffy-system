@@ -1,39 +1,39 @@
 .text
 
-_jread:
+_jxread:
   mov $0x2000003, %rax
   syscall
   ret
 
-_jwrite:
+_jxwrite:
   mov $0x2000004, %rax
   syscall
   ret
 
-_jopen:
+_jxopen:
   mov $0x2000005, %rax
   syscall
   ret
 
-_jclose:
+_jxclose:
   mov $0x2000006, %rax
   syscall
   ret
 
-_jmmap:
+_jxmmap:
   mov $0x20000C5, %rax
   mov %rcx, %r10
   syscall
   ret
 
-_jmunmap:
+_jxmunmap:
   mov $0x2000049, %rax
   syscall
   ret
 
-.global _jread
-.global _jwrite
-.global _jopen
-.global _jclose
-.global _jmmap
-.global _jmunmap
+.global _jxread
+.global _jxwrite
+.global _jxopen
+.global _jxclose
+.global _jxmmap
+.global _jxmunmap
