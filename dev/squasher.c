@@ -1,5 +1,5 @@
 #include "sys.h"
-#include "io.h"
+#include "base.h"
 
 unsigned squash(char* buf, unsigned size)
 {
@@ -26,15 +26,15 @@ unsigned squash(char* buf, unsigned size)
 
 int main(int argc, char** argv)
 {
-  int file = open(argv[1], 0, 0);
+  int file = jopen(argv[1], 0, 0);
   char in[1000];
-  unsigned size = read(file, in, 1000);
-  close(file);
+  unsigned size = jread(file, in, 1000);
+  jclose(file);
 
   unsigned result_size = squash(in, size);
 
-  file = open(argv[2], 0x0001 | 0x0200 | 0x0400, 0644);
-  write(file, in, result_size);
-  close(file);
+  file = jopen(argv[2], 0x0001 | 0x0200 | 0x0400, 0644);
+  jwrite(file, in, result_size);
+  jclose(file);
   return 0;
 }

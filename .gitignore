@@ -1,2 +1,4 @@
 .DS_Store
 tube
+dev/build
+*.swp

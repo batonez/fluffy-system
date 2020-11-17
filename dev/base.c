@@ -13,7 +13,7 @@ unsigned strlength(const char* str)
 int writestr(int fd, const char* buf)
 {
   unsigned len = strlength(buf);
-  return write(fd, buf, len);
+  return jwrite(fd, buf, len);
 }
 
 unsigned inttostr(int integer, char* out)
