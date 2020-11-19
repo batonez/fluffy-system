@@ -31,9 +31,21 @@ _jxmunmap:
   syscall
   ret
 
+_jxstat:
+  mov $0x2000152, %rax
+  syscall
+  ret
+
+_jxfstat:
+  mov $0x2000153, %rax
+  syscall
+  ret
+
 .global _jxread
 .global _jxwrite
 .global _jxopen
 .global _jxclose
 .global _jxmmap
 .global _jxmunmap
+.global _jxfstat
+

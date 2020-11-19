@@ -44,3 +44,35 @@ unsigned jxinttostr(int integer, char* out)
   return num_digits;
 }
 
+void* jxalloc(unsigned long* size)
+{
+  if (*size % JX_PAGE_SIZE)
+    *size = (*size) / JX_PAGE_SIZE * JX_PAGE_SIZE + JX_PAGE_SIZE;
+
+  void* ptr = jxmmap((void*) 1, *size, JX_PROT_WRITE | JX_PROT_READ, JX_MAP_PRIVATE | JX_MAP_ANON, -1, 0);
+
+  if ((long) ptr < 0) {
+    jxwritestr(JX_STDOUT, "Failed to allocate page\n");
+    return 0;
+  }
+
+  return ptr;
+}
+
+void jxdealloc(void* ptr, unsigned long size)
+{
+  if (jxmunmap(ptr, size))
+    jxwritestr(JX_STDOUT, "Failed to deallocate page\n");
+}
+
+unsigned long jxgetfilesize(int fd)
+{
+  struct stat64 filestat;
+  if (jxfstat(fd, &filestat)) {
+    jxwritestr(JX_STDOUT, "Failed to get file stat\n");
+    return -1;
+  }
+
+  return filestat.st_size;
+}
+

@@ -1,3 +1,5 @@
+#include <sys/stat.h>
+
 #define JX_STDOUT 1
 
 //jxopen
@@ -25,3 +27,6 @@ int jxopen(const char* path, int flags, int mode);
 int jxclose(int fd);
 void* jxmmap(void* addr, unsigned long len, int prot, int flags, int fd, unsigned long pos);
 int jxmunmap(void* addr, unsigned long len);
+int jxstat(const char* path, struct stat64* filestat);
+int jxfstat(int fd, struct stat64* filestat);
+
