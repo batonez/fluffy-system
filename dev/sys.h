@@ -21,8 +21,8 @@
 
 #define JX_PAGE_SIZE 4096 // not necessarily true, better to define at runtime via sysctl call
 
-unsigned jxwrite(int fd, const char* buff, unsigned long size);
-unsigned jxread(int fd, char* buff, unsigned long size);
+unsigned jxwrite(int fd, const void* buff, unsigned long size);
+unsigned jxread(int fd, void* buff, unsigned long size);
 int jxopen(const char* path, int flags, int mode);
 int jxclose(int fd);
 void* jxmmap(void* addr, unsigned long len, int prot, int flags, int fd, unsigned long pos);
