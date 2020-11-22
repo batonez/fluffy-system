@@ -1,11 +1,28 @@
-all: squasher memorytest bmptest
+all: squasher memorytest bmptest gradient bresenham
 
-render: bmptest builddir
-	build/bmptest
+######################
+
+render-gradient: gradient
+	rm -f picture.bmp
+	build/gradient
+	build/gradient
 	open picture.bmp
 
-bmptest: bmptest.o base.o syscalls.o builddir
-	ld -lSystem build/bmptest.o build/base.o build/syscalls.o -o build/bmptest
+render-bresenham: bresenham
+	rm -f picture.bmp
+	build/bresenham
+	open picture.bmp
+
+######################
+
+gradient: gradient.o base.o syscalls.o bmp.o builddir
+	ld -lSystem build/bmp.o build/gradient.o build/base.o build/syscalls.o -o build/gradient
+
+bresenham: bresenham.o base.o syscalls.o bmp.o builddir
+	ld -lSystem build/bmp.o build/bresenham.o build/base.o build/syscalls.o -o build/bresenham
+
+bmptest: bmptest.o bmp.o base.o syscalls.o builddir
+	ld -lSystem build/bmptest.o build/bmp.o build/base.o build/syscalls.o -o build/bmptest
 
 memorytest: memorytest.o base.o syscalls.o builddir
 	ld -lSystem build/memorytest.o build/base.o build/syscalls.o -o build/memorytest
@@ -13,20 +30,33 @@ memorytest: memorytest.o base.o syscalls.o builddir
 squasher: squasher.o base.o syscalls.o builddir
 	ld -lSystem build/squasher.o build/base.o build/syscalls.o -o build/squasher
 
-bmptest.o: bmptest.c builddir
+######################
+
+bmp.o: builddir
+	gcc -c bmp.c -o build/bmp.o
+
+gradient.o: builddir
+	gcc -c gradient.c -o build/gradient.o
+
+bresenham.o: builddir
+	gcc -c bresenham.c -o build/bresenham.o
+
+bmptest.o: builddir
 	gcc -c bmptest.c -o build/bmptest.o
 
-memorytest.o: memorytest.c builddir
+memorytest.o: builddir
 	gcc -c memorytest.c -o build/memorytest.o
 
-squasher.o: squasher.c builddir
+squasher.o: builddir
 	gcc -c squasher.c -o build/squasher.o
 
-base.o: base.c builddir
+base.o: builddir
 	gcc -c base.c -o build/base.o
 
-syscalls.o: syscalls.s builddir
+syscalls.o: builddir
 	as syscalls.s -o build/syscalls.o
+
+######################
 
 builddir: 
 	mkdir -p build
