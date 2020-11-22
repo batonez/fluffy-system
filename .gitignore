@@ -2,3 +2,5 @@
 tube
 dev/build
 *.swp
+*.o
+*.bmp
