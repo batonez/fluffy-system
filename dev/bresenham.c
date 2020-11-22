@@ -52,9 +52,18 @@ jx_pixel24bit jxcalculate_pixel_color(int x, int y, jx_uniform* u)
     jxswap(&x, &y);
 
   if (x >= u->x0 && x < u->x1) {
-    int yline = jxround(u->k * x + u->b);
-    if (y == yline)
+    float ylineideal = u->k * x + u->b;
+    int yline = jxround(ylineideal);
+
+    if (y == yline) {
       result.r = 255;
+    } else if (y == yline - 1) {
+      float error = ylineideal - yline + 0.5f;
+      result.r = 255.0 * (1.0f - error);
+    } else if (y == yline + 1) {
+      float error = ylineideal - yline + 0.5f;
+      result.r = 255.0 * error;
+    }
   }
 
   return result;
@@ -70,7 +79,7 @@ int main()
   uniform.x0 = 300;
   uniform.x1 = 1400;
   uniform.y0 = 200;
-  uniform.y1 = 400;
+  uniform.y1 = 250;
 
   jxprecalculate(&uniform);
 
