@@ -1,4 +1,4 @@
-all: squasher memorytest bmptest gradient bresenham
+all: squasher memorytest bmptest gradient bresenham lines
 
 ######################
 
@@ -13,6 +13,11 @@ render-bresenham: bresenham
 	build/bresenham
 	open picture.bmp
 
+render-lines: lines
+	rm -f picture.bmp
+	build/lines
+	open picture.bmp
+
 ######################
 
 gradient: gradient.o base.o syscalls.o bmp.o builddir
@@ -20,6 +25,9 @@ gradient: gradient.o base.o syscalls.o bmp.o builddir
 
 bresenham: bresenham.o base.o syscalls.o bmp.o builddir
 	ld -lSystem build/bmp.o build/bresenham.o build/base.o build/syscalls.o -o build/bresenham
+
+lines: lines.o base.o syscalls.o bmp.o builddir
+	ld -lSystem build/bmp.o build/lines.o build/base.o build/syscalls.o -o build/lines
 
 bmptest: bmptest.o bmp.o base.o syscalls.o builddir
 	ld -lSystem build/bmptest.o build/bmp.o build/base.o build/syscalls.o -o build/bmptest
@@ -40,6 +48,9 @@ gradient.o: builddir
 
 bresenham.o: builddir
 	gcc -c bresenham.c -o build/bresenham.o
+
+lines.o: builddir
+	gcc -c lines.c -o build/lines.o
 
 bmptest.o: builddir
 	gcc -c bmptest.c -o build/bmptest.o

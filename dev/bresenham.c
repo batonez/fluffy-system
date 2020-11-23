@@ -33,14 +33,14 @@ int jxround(float a)
 void jxprecalculate(jx_uniform* u)
 {
   if (u->x0 > u->x1)
-    jxswap(&(u->x0), &(u->x1));
+    jxswap(&u->x0, &u->x1);
 
   if (u->y0 > u->y1)
-    jxswap(&(u->y0), &(u->y1));
+    jxswap(&u->y0, &u->y1);
 
   if (u->x1 - u->x0 < u->y1 - u->y0) {
-    jxswap(&(u->x0), &(u->y0));
-    jxswap(&(u->x1), &(u->y1));
+    jxswap(&u->x0, &u->y0);
+    jxswap(&u->x1, &u->y1);
     u->swapxy = 1;
   } else {
     u->swapxy = 0;
