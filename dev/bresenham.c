@@ -2,6 +2,7 @@
 #include "base.h"
 #include "pixels.h"
 #include "bmp.h"
+#include <stdio.h>
 
 #define WIDTH 1920
 #define HEIGHT 1080
@@ -10,6 +11,8 @@ typedef struct {
   int width;
   int height;
   int x0, y0, x1, y1;
+  int antialiasing;
+  int swapxy;
   float k;
   float b;
 } jx_uniform;
@@ -38,6 +41,9 @@ void jxprecalculate(jx_uniform* u)
   if (u->x1 - u->x0 < u->y1 - u->y0) {
     jxswap(&(u->x0), &(u->y0));
     jxswap(&(u->x1), &(u->y1));
+    u->swapxy = 1;
+  } else {
+    u->swapxy = 0;
   }
 
   u->k = (float) (u->y1 - u->y0) / (u->x1 - u->x0);
@@ -48,21 +54,25 @@ jx_pixel24bit jxcalculate_pixel_color(int x, int y, jx_uniform* u)
 {
   jx_pixel24bit result = {0, 0, 0};
 
-  if (u->x1 - u->x0 < u->y1 - u->y0)
+  if (u->swapxy)
     jxswap(&x, &y);
 
-  if (x >= u->x0 && x < u->x1) {
+  if (x >= u->x0 && x <= u->x1) {
     float ylineideal = u->k * x + u->b;
     int yline = jxround(ylineideal);
 
     if (y == yline) {
       result.r = 255;
-    } else if (y == yline - 1) {
-      float error = ylineideal - yline + 0.5f;
-      result.r = 255.0 * (1.0f - error);
-    } else if (y == yline + 1) {
-      float error = ylineideal - yline + 0.5f;
-      result.r = 255.0 * error;
+    }
+
+    if (u->antialiasing) {
+      if (y == yline - 1) {
+        float error = ylineideal - yline + 0.5f;
+        result.r = 255.0 * (1.0f - error);
+      } else if (y == yline + 1) {
+        float error = ylineideal - yline + 0.5f;
+        result.r = 255.0 * error;
+      }
     }
   }
 
@@ -77,9 +87,10 @@ int main()
   uniform.width = WIDTH;
   uniform.height = HEIGHT;
   uniform.x0 = 300;
-  uniform.x1 = 1400;
-  uniform.y0 = 200;
-  uniform.y1 = 250;
+  uniform.x1 = 1910;
+  uniform.y0 = 750;
+  uniform.y1 = 700;
+  uniform.antialiasing = 1;
 
   jxprecalculate(&uniform);
 
