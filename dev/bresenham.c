@@ -2,7 +2,6 @@
 #include "base.h"
 #include "pixels.h"
 #include "bmp.h"
-#include <stdio.h>
 
 #define WIDTH 1920
 #define HEIGHT 1080
@@ -16,19 +15,6 @@ typedef struct {
   float k;
   float b;
 } jx_uniform;
-
-void jxswap(int* a, int* b)
-{
-  int tmp = *a;
-  *a = *b;
-  *b = tmp;
-}
-
-int jxround(float a)
-{
-  a += a - (int) a;
-  return (int) a;
-}
 
 void jxprecalculate(jx_uniform* u)
 {

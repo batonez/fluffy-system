@@ -19,19 +19,6 @@ typedef struct {
   float b;
 } jx_line_primitive;
 
-void jxswap(int* a, int* b)
-{
-  int tmp = *a;
-  *a = *b;
-  *b = tmp;
-}
-
-int jxround(float a)
-{
-  a += a - (int) a;
-  return (int) a;
-}
-
 void jxprecalculate(jx_line_primitive* p)
 {
   if (p->x0 > p->x1)
