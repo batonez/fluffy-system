@@ -133,6 +133,8 @@ unsigned jxstrtofloat(const char* in, float *result)
   unsigned long divisor = jxpow(10, decimal_places);
   float part = (float) decimal / divisor;
   *result = (float) integral + part;
+
+  return point_position + decimal_places + 1;
 }
 
 void* jxalloc(unsigned long* size)
