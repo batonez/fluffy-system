@@ -25,12 +25,15 @@ unsigned jxreadline(int fd, char* buf, unsigned size)
   unsigned sizeused = 0;
   char c = jxreadchar(fd);
 
-  while (c != JX_EOF && c != '\n' && sizeused < size) {
+  while (c != JX_EOF && c != '\n' && sizeused + 1 < size) {
     buf[sizeused++] = c;
     c = jxreadchar(fd);
   }
 
-  buf[sizeused] = '\0';
+  if (c == JX_EOF)
+    return JX_EOF;
+
+  buf[sizeused++] = '\0';
   return sizeused;
 }
 
@@ -77,6 +80,44 @@ unsigned jxinttostr(int integer, char* out)
 
   out[num_symbols++] = '\0';
   return num_symbols;
+}
+
+int jxpow(int base, unsigned exp)
+{
+  int result = 1;
+
+  while (exp > 0) {
+    result *= base;
+    exp--;
+  }
+
+  return result;
+}
+
+unsigned jxstrtoint(const char* in, int* result)
+{
+  unsigned num_digits = 0;
+
+  while (in[num_digits] != '\0')
+    num_digits++;
+
+  if (!num_digits)
+    return 0;
+
+  unsigned start = 0;
+  if (in[0] == '-')
+    start++;
+
+  *result = 0;
+
+  for (unsigned i = start; i < num_digits; i++) {
+    *result += (in[i] - 48) * jxpow(10, (num_digits - 1 - i));
+  }
+
+  if (start)
+    *result = - *result;
+
+  return num_digits;
 }
 
 void* jxalloc(unsigned long* size)
