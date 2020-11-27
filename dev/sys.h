@@ -1,3 +1,5 @@
+#pragma once
+
 #include <sys/stat.h>
 
 #define JX_STDOUT 1

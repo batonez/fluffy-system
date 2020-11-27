@@ -1,4 +1,38 @@
 #include "sys.h"
+#include "base.h"
+
+static unsigned long int randnext = 13875920;
+
+int jxrand(void)
+{
+  randnext = randnext * 11035143;
+  return randnext % (JX_RAND_MAX + 1);
+}
+
+void jxsrand(unsigned int seed)
+{
+  randnext = seed;
+}
+
+char jxreadchar(int fd)
+{
+  char result;
+  return jxread(fd, &result, 1) ? result : JX_EOF;
+}
+
+unsigned jxreadline(int fd, char* buf, unsigned size)
+{
+  unsigned sizeused = 0;
+  char c = jxreadchar(fd);
+
+  while (c != JX_EOF && c != '\n' && sizeused < size) {
+    buf[sizeused++] = c;
+    c = jxreadchar(fd);
+  }
+
+  buf[sizeused] = '\0';
+  return sizeused;
+}
 
 unsigned jxstrlength(const char* str)
 {
@@ -18,11 +52,11 @@ int jxwritestr(int fd, const char* buf)
 
 unsigned jxinttostr(int integer, char* out)
 {
-  unsigned num_digits = 0;
+  unsigned num_symbols = 0;
 
   if (integer < 0) {
     integer = -integer;
-    num_digits++;
+    num_symbols++;
     out[0] = '-';
   }
 
@@ -30,18 +64,19 @@ unsigned jxinttostr(int integer, char* out)
 
   do {
     copy /= 10;
-    num_digits++;
+    num_symbols++;
   } while (copy != 0);
  
   int i = 1;
 
   do {
     int digit = integer % 10;
-    out[num_digits - i++] = digit + 48;
+    out[num_symbols - i++] = digit + 48;
     integer /= 10;
   } while (integer != 0);
 
-  return num_digits;
+  out[num_symbols++] = '\0';
+  return num_symbols;
 }
 
 void* jxalloc(unsigned long* size)

@@ -1,4 +1,4 @@
-all: squasher memorytest bmptest gradient bresenham lines
+all: squasher memorytest bmptest gradient bresenham lines readlinetest
 
 ######################
 
@@ -38,6 +38,9 @@ memorytest: memorytest.o base.o syscalls.o builddir
 squasher: squasher.o base.o syscalls.o builddir
 	ld -lSystem build/squasher.o build/base.o build/syscalls.o -o build/squasher
 
+readlinetest: readlinetest.o base.o syscalls.o builddir
+	ld -lSystem build/readlinetest.o build/base.o build/syscalls.o -o build/readlinetest
+
 ######################
 
 bmp.o: builddir
@@ -60,6 +63,9 @@ memorytest.o: builddir
 
 squasher.o: builddir
 	gcc -c squasher.c -o build/squasher.o
+
+squasher.o: builddir
+	gcc -c readlinetest.c -o build/readlinetest.o
 
 base.o: builddir
 	gcc -c base.c -o build/base.o
