@@ -7,17 +7,8 @@
 #define HEIGHT 1080
 
 typedef struct {
-  int width;
-  int height;
   int antialiasing;
 } jx_uniform;
-
-typedef struct {
-  int swapxy;
-  int x0, y0, x1, y1;
-  float k;
-  float b;
-} jx_line_primitive;
 
 void jxprecalculate(jx_line_primitive* p)
 {
@@ -73,16 +64,9 @@ int main()
   }
 
   jx_uniform uniform;
-  uniform.width = WIDTH;
-  uniform.height = HEIGHT;
   uniform.antialiasing = 1;
 
   #define NUM_VERTICES 400
-
-  typedef struct {
-    int x;
-    int y;
-  } jx_vertex;
 
   jx_vertex vertexarray[NUM_VERTICES];
   unsigned indexarray[NUM_VERTICES];
