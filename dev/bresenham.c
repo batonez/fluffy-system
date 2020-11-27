@@ -18,13 +18,7 @@ typedef struct {
 
 void jxprecalculate(jx_uniform* u)
 {
-  if (u->x0 > u->x1)
-    jxswap(&u->x0, &u->x1);
-
-  if (u->y0 > u->y1)
-    jxswap(&u->y0, &u->y1);
-
-  if (u->x1 - u->x0 < u->y1 - u->y0) {
+  if (jxabs(u->x1 - u->x0) < jxabs(u->y1 - u->y0)) {
     jxswap(&u->x0, &u->y0);
     jxswap(&u->x1, &u->y1);
     u->swapxy = 1;
@@ -34,6 +28,9 @@ void jxprecalculate(jx_uniform* u)
 
   u->k = (float) (u->y1 - u->y0) / (u->x1 - u->x0);
   u->b = u->y0 - u->x0 * u->k;
+
+  if (u->x0 > u->x1)
+    jxswap(&u->x0, &u->x1);
 }
 
 jx_pixel24bit jxcalculate_pixel_color(int x, int y, jx_uniform* u)
@@ -73,9 +70,9 @@ int main()
   uniform.width = WIDTH;
   uniform.height = HEIGHT;
   uniform.x0 = 300;
-  uniform.x1 = 1910;
-  uniform.y0 = 750;
-  uniform.y1 = 700;
+  uniform.x1 = 1400;
+  uniform.y0 = 400;
+  uniform.y1 = 300;
   uniform.antialiasing = 1;
 
   jxprecalculate(&uniform);

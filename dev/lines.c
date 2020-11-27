@@ -21,15 +21,9 @@ typedef struct {
 
 void jxprecalculate(jx_line_primitive* p)
 {
-  if (p->x0 > p->x1)
-    jxswap(&(p->x0), &(p->x1));
-
-  if (p->y0 > p->y1)
-    jxswap(&(p->y0), &(p->y1));
-
-  if (p->x1 - p->x0 < p->y1 - p->y0) {
-    jxswap(&(p->x0), &(p->y0));
-    jxswap(&(p->x1), &(p->y1));
+  if (p->x1 - p->x0 < jxabs(p->y1 - p->y0)) {
+    jxswap(&(p->x0), &p->y0);
+    jxswap(&p->x1, &p->y1);
     p->swapxy = 1;
   } else {
     p->swapxy = 0;
@@ -37,6 +31,9 @@ void jxprecalculate(jx_line_primitive* p)
 
   p->k = (float) (p->y1 - p->y0) / (p->x1 - p->x0);
   p->b = p->y0 - p->x0 * p->k;
+
+  if (p->x0 > p->x1)
+    jxswap(&p->x0, &p->x1);
 }
 
 void jxcalculate_pixel_color(int x, int y, const jx_uniform* u, const jx_line_primitive* p, jx_pixel24bit* result)
@@ -80,23 +77,33 @@ int main()
   uniform.height = HEIGHT;
   uniform.antialiasing = 1;
 
-  int vertexarray[] = {1400, 250, 1910, 1070, 300, 400, 1800, 800};
-  int vertexsize = 2;
-  unsigned indexarray[] = {0, 1, 2, 3};
+  #define NUM_VERTICES 400
 
-  for (int i = 0; i < 4; i += 2) {
+  typedef struct {
+    int x;
+    int y;
+  } jx_vertex;
+
+  jx_vertex vertexarray[NUM_VERTICES];
+  unsigned indexarray[NUM_VERTICES];
+
+  for (int i = 0; i < NUM_VERTICES; i++) {
+    vertexarray[i].x = jxrand() % WIDTH;
+    vertexarray[i].y = jxrand() % HEIGHT;
+    indexarray[i] = i;
+  }
+
+  for (int i = 0; i < NUM_VERTICES; i += 2) {
     jx_line_primitive line;
-    line.x0 = vertexarray[indexarray[i]*vertexsize];
-    line.y0 = vertexarray[indexarray[i]*vertexsize + 1];
-    line.x1 = vertexarray[indexarray[i + 1]*vertexsize];
-    line.y1 = vertexarray[indexarray[i + 1]*vertexsize + 1];
+    line.x0 = vertexarray[indexarray[i]].x;
+    line.y0 = vertexarray[indexarray[i]].y;
+    line.x1 = vertexarray[indexarray[i + 1]].x;
+    line.y1 = vertexarray[indexarray[i + 1]].y;
     jxprecalculate(&line);
 
-    for (register int x = 0; x < WIDTH; x++) {
-      for (register int y = 0; y < HEIGHT; y++) {
+    for (register int x = 0; x < WIDTH; x++)
+      for (register int y = 0; y < HEIGHT; y++)
         jxcalculate_pixel_color(x, y, &uniform, &line, &pixels[y*WIDTH + x]);
-      }
-    }
   }
 
   jxsavebmpfile(pixels, WIDTH, HEIGHT);
