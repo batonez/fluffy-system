@@ -78,7 +78,6 @@ unsigned jxinttostr(int integer, char* out)
     integer /= 10;
   } while (integer != 0);
 
-  out[num_symbols++] = '\0';
   return num_symbols;
 }
 
