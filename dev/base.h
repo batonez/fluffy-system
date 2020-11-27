@@ -9,6 +9,7 @@ char jxreadchar(int fd);
 unsigned jxreadline(int fd, char* buf, unsigned size);
 unsigned jxinttostr(int integer, char* out);
 unsigned jxstrtoint(const char* in, int* result);
+unsigned jxstrtofloat(const char* in, float *result);
 void* jxalloc(unsigned long* size);
 void jxdealloc(void* ptr, unsigned long size);
 unsigned long jxgetfilesize(int fd);

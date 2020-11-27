@@ -94,11 +94,11 @@ int jxpow(int base, unsigned exp)
   return result;
 }
 
-unsigned jxstrtoint(const char* in, int* result)
+static unsigned jxstrtoint_impl(const char* in, int* result, char stop)
 {
   unsigned num_digits = 0;
 
-  while (in[num_digits] != '\0')
+  while (in[num_digits] != stop)
     num_digits++;
 
   if (!num_digits)
@@ -118,6 +118,22 @@ unsigned jxstrtoint(const char* in, int* result)
     *result = - *result;
 
   return num_digits;
+}
+
+unsigned jxstrtoint(const char* in, int* result)
+{
+  return jxstrtoint_impl(in, result, '\0');
+}
+
+unsigned jxstrtofloat(const char* in, float *result)
+{
+  int integral, decimal;
+  unsigned point_position = jxstrtoint_impl(in, &integral, '.');
+  unsigned decimal_places = jxstrtoint(in + point_position + 1, &decimal);
+
+  unsigned long divisor = jxpow(10, decimal_places);
+  float part = (float) decimal / divisor;
+  *result = (float) integral + part;
 }
 
 void* jxalloc(unsigned long* size)
